@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { getAuth, GithubAuthProvider, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { getAuth, GithubAuthProvider, GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
 import app from '../Firebase/firebase.init';
 
 const auth = getAuth(app);
@@ -36,10 +36,27 @@ const Main = () => {
 
     }
 
+    const handleSignOut=()=>{
+        // console.log("clicked");
+        signOut(auth)
+        .then(()=>{
+            setUser("")
+        })
+        .catch((error)=>{
+            "Error",error
+        })
+    }
 
     return (
         <div>
             <h1>Hello Firebase Are You Ready?</h1>
+
+            {
+                user.uid? <button onClick={handleSignOut}>Sign Out</button> : <>
+                    <button onClick={handleGoogleLogin}>Login with Google</button>
+                    <button onClick={handleGitHubLogin}>Login with GitHub</button>
+                </>
+            }
             {
                 user.uid && <div>
                     <h3>Name : {user?.displayName}</h3>
@@ -47,8 +64,8 @@ const Main = () => {
                     <img src={user?.photoURL} alt="" />
                 </div>
             }
-            <button onClick={handleGoogleLogin}>Login with Google</button>
-            <button onClick={handleGitHubLogin}>Login with GitHub</button>
+            
+            
         </div>
     );
 };
